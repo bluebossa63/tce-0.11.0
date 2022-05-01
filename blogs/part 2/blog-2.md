@@ -8,7 +8,7 @@ This diagram shows the challenges for reliable kubernetes packaging.
 
 There are different sources already introduced like helm repositories. If you do not start from scratch and want to rely on a vendors helm repo, you might want to continously integrate with new releases of this repo. The integration part can be done with a lot of scripting tools, the [toolchain introduced and maintained by VMware](https://tanzu.vmware.com/content/blog/introducing-k14s-kubernetes-tools-simple-and-composable-tools-for-application-deployment) addresses a lot of these common issues like templating, image management, catalog bundling, support of air-gapped environments.
 
-The second customization step is currentyl not fully addressed with the proposed tool chain. Very crucial for productive environment is handling of secrets and certificates, usually externalized by a vault like CyberArk or [HashiCorp Vault](https://vdan.niceneasy.ch/secure-prometheus-configuration-with-hashicorp-vault-on-k8s/). There are other interesting solutions like [sealed secrets](https://github.com/bitnami-labs/sealed-secrets) or [CSI implementations](https://learn.hashicorp.com/tutorials/vault/kubernetes-secret-store-driver) together with strict security recommendations regarding RBAC for personal access that might help to mitigate the security risks involved in storing secrets - and helping not to find them in Git repositories anymore.
+The second customization step is currentyl not fully addressed with the proposed tool chain. Very crucial for productive environment is handling of secrets and certificates, usually externalized by a vault like CyberArk or [HashiCorp Vault](https://vdan.niceneasy.ch/secure-prometheus-configuration-with-hashicorp-vault-on-k8s/). There are other interesting solutions like [sealed secrets](https://github.com/bitnami-labs/sealed-secrets) or [CSI implementations](https://learn.hashicorp.com/tutorials/vault/kubernetes-secret-store-driver) together with strict security recommendations regarding RBAC for personal access that might help to mitigate the security risks involved in storing secrets - and helping not to find them in Git repositories anymore. I am using hashicorp vault with the CSI driver and will go in further details in the last part.
 
 Now let's jump into the process directly at the application template in the diagram above: in case of TCE, these templates are defined as tanzu package catalog that you can load like any other container:
 
@@ -24,6 +24,8 @@ tanzu package installed list --all-namespaces
 ```
 
 You can install the packages from the TCE catalog one by one in any combination, or you can try the [app-toolkit](https://tanzucommunityedition.io/docs/v0.11/package-readme-app-toolkit-0.1.0/). 
+
+*The files I am referencing throughout my blog post can be found [here](https://github.com/bluebossa63/tce-0.11.0).*
 
 Bundling requires aggregating all needed values into one component ([common value file](../../app-toolkit/values.yaml)) - this can be done but needs to be tested on the individual package level anyway. So I followed the lead of the contents of the app-toolkit and installed everything individually - adding harbor and the recommendation of [this vsphere must-read on monitoring](https://tanzucommunityedition.io/docs/v0.11/vsphere-monitoring-stack/):
 
@@ -65,6 +67,7 @@ OK, now I had some additional tools on the plate to create the management cluste
 
 - metallb
 - argocd
+- hashicorp vault
 - nexus (maven and other repo types)
 - jenkins (nice to have)
 - plex (just for fun)
@@ -72,11 +75,11 @@ OK, now I had some additional tools on the plate to create the management cluste
 So I decided to try out the package management system proposed by TCE. You will find my test [here](../../packaging/), just cd in and try it out yourself following [the documentation](https://tanzucommunityedition.io/docs/v0.11/package-creation-step-by-step/). Again: subject of automation if you want to do continuous delivery of external sources of manifests.
 
 ```bash
-tanzu package repository add niceneasy.ch --url bluebossa63/dev-tools-tanzu-package@sha256:57114a80510a1b492da531e54528d25813ad6924cc9f37e1f38cea800389478a  --namespace tanzu-package-repo-global
+tanzu package repository add niceneasy.ch --url bluebossa63/dev-tools-tanzu-package:0.1.0 --namespace tanzu-package-repo-global
 ```
 installes the result onto your cluster provided as is. Honestly, I took the shortcut and did not externalize a lot of configuration values. It was more a test of the overall handling for me. But everything lays there and should be easily adaptable.
 
-Some feedback on the tanzu tooling:
+## Some feedback on the Tanzu tooling
 
 I had some issues setting the registry credentials correctly and honestly, I did not fully understand the concept of this redundancy in holding secrets in plain k8s or via tanzu utilities. And honestly, sometimes it really gets a bit weird:
 
@@ -86,7 +89,7 @@ is the same as
 
 kubectl apply -f workload.yaml
 
-I question the effort to create such redundancies, why not stick to the concept to use CRDs directly. This is also my preferred way to create workload clusters. I have seen the same development on openshift installations: a bunch of tools is evolving to address tasks like registry mirroring for air-gapped environments together with catalog-management. I have the impression the different players are not collaborating to standardize more - this could backfire by adding even more complexity if you want to support all packaging implementations.
+I question the effort to create such redundancies, why not stick to the concept to use CRDs directly. This is also my preferred way to create workload clusters. I have seen the same development on openshift installations: a bunch of tools is evolving to address tasks like registry mirroring for air-gapped environments together with catalog-management. I have the impression the different players are not collaborating to standardize more - this could backfire by adding even more complexity if you want to support all packaging implementations or you have to support multiple vendors.
 
 Something different are utilities like
 

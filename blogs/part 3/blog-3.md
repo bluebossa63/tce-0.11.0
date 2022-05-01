@@ -18,6 +18,8 @@ This is the description of the latest version (0.2.0), I was working with 0.1.0:
 
 cert-manager is creating a bootstrap problem, if you want to enforce a common custom CA. You have to keep the sequence to first install the cert-manager, then create secrets and clusterissuers. In my tests with 0.1.0 the installation failed because of cert-manager as well. I am not sure if the installation sequence is correctly designed or enforced. But you can exclude packages from beeing installed with the bundle, that's how I could meet my requirement of a custom CA.
 
+*The files I am referencing throughout my blog post can be found [here](https://github.com/bluebossa63/tce-0.11.0).*
+
 I first installed cert-manager manually
 
 ```bash
