@@ -1,0 +1,8 @@
+apiVersion: packaging.carvel.dev/v1alpha1
+kind: PackageRepository
+metadata:
+  name: tanzu-dev-tools
+spec:
+  fetch:
+    imgpkgBundle:
+      image: bluebossa63/dev-tools-tanzu-package@sha256:fc5a60315c5340b01a8cccdf571bcc4be4f6d9d0d06ec8ad095e31568a1f75b3

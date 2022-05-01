@@ -1,0 +1,25 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: Package
+metadata:
+  name: metallb.niceneasy.ch.0.1.0
+spec:
+  refName: metallb.niceneasy.ch
+  version: 0.1.0
+  releaseNotes: "first PoC for tanzu packaging, provided as is"
+  licenses:
+    - "Apache 2.0"
+  template:
+    spec:
+      fetch:
+        - imgpkgBundle:
+            image: bluebossa63/metallb-tanzu-package@sha256:039efe7ea50935eb90089f2d9314e114fd2fa4792534b7e123195489d1b878b5
+      template:
+        - ytt:
+            paths:
+              - config/
+        - kbld:
+            paths:
+              - "-"
+              - .imgpkg/images.yml
+      deploy:
+      - kapp: {}

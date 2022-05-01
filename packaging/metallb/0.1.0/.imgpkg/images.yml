@@ -1,0 +1,7 @@
+---
+apiVersion: imgpkg.carvel.dev/v1alpha1
+images:
+- annotations:
+    kbld.carvel.dev/id: bluebossa63/tanzu-kpack-package@sha256:143d0080d4b339dd89efad17480d3879177c1f66b5648f970fe81c464194ef98
+  image: index.docker.io/bluebossa63/tanzu-kpack-package@sha256:143d0080d4b339dd89efad17480d3879177c1f66b5648f970fe81c464194ef98
+kind: ImagesLock

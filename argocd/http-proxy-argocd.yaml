@@ -1,0 +1,22 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  labels:
+    app: argocd
+  name: argocd-httpproxy
+  namespace: argocd
+spec:
+  routes:
+  - conditions:
+    - prefix: /
+    pathRewritePolicy:
+      replacePrefix:
+      - prefix: /
+        replacement: /
+    services:
+    - name: argocd-server
+      port: 80
+  virtualhost:
+    fqdn: argocd.ne.local
+    tls:
+      secretName: argocd-tls

@@ -1,0 +1,8 @@
+#@ load("@ytt:data", "data")
+#@ def config():
+address-pools:
+  - name: default
+    protocol: layer2
+    addresses: 
+      - #@ data.values.ip_pool
+#@ end

@@ -1,0 +1,19 @@
+---
+apiVersion: imgpkg.carvel.dev/v1alpha1
+images:
+- annotations:
+    kbld.carvel.dev/id: docker.io/bitnami/jenkins:2.332.2-debian-10-r7
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: 2.332.2-debian-10-r7
+          url: docker.io/bitnami/jenkins:2.332.2-debian-10-r7
+      - preresolved:
+          url: index.docker.io/bitnami/jenkins@sha256:4e08d0b73768c8ffdd715665ddf18bb0c76d4bdc366deeabb2b8beb3c38992bc
+      - preresolved:
+          url: index.docker.io/bitnami/jenkins@sha256:4e08d0b73768c8ffdd715665ddf18bb0c76d4bdc366deeabb2b8beb3c38992bc
+      - preresolved:
+          url: index.docker.io/bitnami/jenkins@sha256:4e08d0b73768c8ffdd715665ddf18bb0c76d4bdc366deeabb2b8beb3c38992bc
+      - preresolved:
+          url: index.docker.io/bitnami/jenkins@sha256:4e08d0b73768c8ffdd715665ddf18bb0c76d4bdc366deeabb2b8beb3c38992bc
+  image: index.docker.io/bitnami/jenkins@sha256:4e08d0b73768c8ffdd715665ddf18bb0c76d4bdc366deeabb2b8beb3c38992bc
+kind: ImagesLock

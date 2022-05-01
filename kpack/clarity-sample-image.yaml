@@ -1,0 +1,33 @@
+apiVersion: kpack.io/v1alpha2
+kind: Builder
+metadata:
+  name: clarity-sample-builder
+  namespace: default
+spec:
+  serviceAccountName: kpack-service-account
+  tag: harbor.ne.local/tph-local/clarity-sample:1.0.0
+  stack:
+    name: base
+    kind: ClusterStack
+  store:
+    name: default
+    kind: ClusterStore
+  order:
+  - group:
+    - id: paketo-buildpacks/nodejs
+---
+apiVersion: kpack.io/v1alpha2
+kind: Image
+metadata:
+  name: clarity-sample-image
+  namespace: default
+spec:
+  tag: harbor.ne.local/tph-local/clarity-sample-builder:1.0.0
+  serviceAccountName: kpack-service-account
+  builder:
+    name: clarity-sample-builder
+    kind: Builder
+  source:
+    git:
+      url: https://github.com/Ismaestro/angular-example-app
+      revision: 3354fcb0d6488ed2ef9d1feab91a30cad196513a

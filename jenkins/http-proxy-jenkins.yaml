@@ -1,0 +1,22 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  labels:
+    app: jenkins
+  name: jenkins-httpproxy
+  namespace: jenkins
+spec:
+  routes:
+  - conditions:
+    - prefix: /
+    pathRewritePolicy:
+      replacePrefix:
+      - prefix: /
+        replacement: /
+    services:
+    - name: tph-jenkins
+      port: 80
+  virtualhost:
+    fqdn: jenkins.ne.local
+    tls:
+      secretName: jenkins-tls

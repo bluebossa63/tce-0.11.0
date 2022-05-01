@@ -1,0 +1,14 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: PackageMetadata
+metadata:
+  name: vault.niceneasy.ch
+spec:
+  displayName: "hashicorp vault"
+  longDescription: "vault with CSI-driver for secrets"
+  shortDescription: "vault with CSI-driver for secrets"
+  providerName: niceneasy.ch
+  maintainers:
+    - name: daniele.ulrich@niceneasy.ch
+  categories:
+    - Secure Vault
+    - Secrets

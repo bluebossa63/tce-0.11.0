@@ -1,0 +1,8 @@
+#@data/values
+---
+
+#! The namespace in which to deploy cert-manager.
+namespace: argocd
+issuerkind: ClusterIssuer 
+issuername: niceneasy-ca
+fqdn: argocd.ne.local

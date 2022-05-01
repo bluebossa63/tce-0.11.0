@@ -1,0 +1,22 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  labels:
+    app: knative-serving
+  name: knative-serving-httpproxy
+  namespace: knative-serving
+spec:
+  routes:
+  - conditions:
+    - prefix: /
+    pathRewritePolicy:
+      replacePrefix:
+      - prefix: /
+        replacement: /
+    services:
+    - name: controller
+      port: 9090
+  virtualhost:
+    fqdn: knative-serving.ne.local
+    tls:
+      secretName: knative-serving-tls

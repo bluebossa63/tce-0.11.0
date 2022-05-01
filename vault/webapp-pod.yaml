@@ -1,0 +1,27 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: webapp
+spec:
+  serviceAccountName: webapp-sa
+  containers:
+  - image: jweissig/app:0.0.1
+    name: webapp
+    volumeMounts:
+    - name: secrets-store-inline
+      mountPath: "/mnt/secrets-store"
+      readOnly: true
+    - name: registry-credentials
+      mountPath: "/mnt/registry-credentials"
+      readOnly: true
+  volumes:
+    - name: secrets-store-inline
+      csi:
+        driver: secrets-store.csi.k8s.io
+        readOnly: true
+        volumeAttributes:
+          secretProviderClass: "vault-database"
+    - name: registry-credentials
+      secret:
+        secretName: registry-credentials
+        

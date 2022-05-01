@@ -1,0 +1,25 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: Package
+metadata:
+  name: plex.niceneasy.ch.0.1.0
+spec:
+  refName: plex.niceneasy.ch
+  version: 0.1.0
+  releaseNotes: "first PoC for tanzu packaging, provided as is"
+  licenses:
+    - "Apache 2.0"
+  template:
+    spec:
+      fetch:
+        - imgpkgBundle:
+            image: bluebossa63/plex-tanzu-package@sha256:67f8a22182207ad2a94c262876de8acac89b0d727a8936ac0b4cf70d0e0a9f53
+      template:
+        - ytt:
+            paths:
+              - config/
+        - kbld:
+            paths:
+              - "-"
+              - .imgpkg/images.yml
+      deploy:
+      - kapp: {}

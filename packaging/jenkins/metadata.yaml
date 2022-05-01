@@ -1,0 +1,17 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: PackageMetadata
+metadata:
+  name: jenkins.niceneasy.ch
+spec:
+  displayName: "bitnami/jenkins"
+  longDescription: |
+    jenkins helm chart by https://charts.bitnami.com/bitnami
+    login:
+    echo Username: user
+    echo Password: $(kubectl get secret --namespace jenkins jenkins -o jsonpath="{.data.jenkins-password}" | base64 --decode)
+  shortDescription: "https://charts.bitnami.com/bitnami jenkins helm chart"
+  providerName: niceneasy.ch
+  maintainers:
+    - name: daniele.ulrich@niceneasy.ch
+  categories:
+    - build tools

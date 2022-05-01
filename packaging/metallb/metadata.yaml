@@ -1,0 +1,14 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: PackageMetadata
+metadata:
+  name: metallb.niceneasy.ch
+spec:
+  displayName: "metallb"
+  longDescription: "Load Balancer Automation for Kubernetes"
+  shortDescription: "metallb load balancer and VIP"
+  providerName: niceneasy.ch
+  maintainers:
+    - name: daniele.ulrich@niceneasy.ch
+  categories:
+    - load balancer
+    - VIP

@@ -1,0 +1,25 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: Package
+metadata:
+  name: argocd.niceneasy.ch.0.1.0
+spec:
+  refName: argocd.niceneasy.ch
+  version: 0.1.0
+  releaseNotes: "first PoC for tanzu packaging, provided as is"
+  licenses:
+    - "Apache 2.0"
+  template:
+    spec:
+      fetch:
+        - imgpkgBundle:
+            image: bluebossa63/argocd-tanzu-package@sha256:df826e3fe03c8d9dc4885128298d704cc0d91e52dec3f9c304cbb9ab93434672
+      template:
+        - ytt:
+            paths:
+              - config/
+        - kbld:
+            paths:
+              - "-"
+              - .imgpkg/images.yml
+      deploy:
+      - kapp: {}

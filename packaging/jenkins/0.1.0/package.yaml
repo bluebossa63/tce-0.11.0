@@ -1,0 +1,25 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: Package
+metadata:
+  name: jenkins.niceneasy.ch.0.1.0
+spec:
+  refName: jenkins.niceneasy.ch
+  version: 0.1.0
+  releaseNotes: "first PoC for tanzu packaging, provided as is"
+  licenses:
+    - "Apache 2.0"
+  template:
+    spec:
+      fetch:
+        - imgpkgBundle:
+            image: bluebossa63/jenkins-tanzu-package@sha256:17763124806228f5924cc12a225a92ed0cc157e0e733dbaa1ef73b795bca162f
+      template:
+        - ytt:
+            paths:
+              - config/
+        - kbld:
+            paths:
+              - "-"
+              - .imgpkg/images.yml
+      deploy:
+      - kapp: {}

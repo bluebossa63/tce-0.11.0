@@ -1,0 +1,18 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  labels:
+    app: vault
+  name: vault-httpproxy
+  namespace: hashicorp-vault
+spec:
+  routes:
+  - conditions:
+    - prefix: /
+    services:
+    - name: vault
+      port: 8200
+  virtualhost:
+    fqdn: vault.ne.local
+    tls:
+      secretName: vault-tls

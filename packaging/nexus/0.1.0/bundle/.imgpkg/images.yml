@@ -1,0 +1,22 @@
+---
+apiVersion: imgpkg.carvel.dev/v1alpha1
+images:
+- annotations:
+    kbld.carvel.dev/id: busybox
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: latest
+          url: busybox
+      - preresolved:
+          url: index.docker.io/library/busybox@sha256:d2b53584f580310186df7a2055ce3ff83cc0df6caacf1e3489bff8cf5d0af5d8
+  image: index.docker.io/library/busybox@sha256:d2b53584f580310186df7a2055ce3ff83cc0df6caacf1e3489bff8cf5d0af5d8
+- annotations:
+    kbld.carvel.dev/id: sonatype/nexus3:3.38.1
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: 3.38.1
+          url: sonatype/nexus3:3.38.1
+      - preresolved:
+          url: index.docker.io/sonatype/nexus3@sha256:66fe12b1eb3e97bae72eb3c2c4e436499d41ff144cdfd1dcd0718df738304732
+  image: index.docker.io/sonatype/nexus3@sha256:66fe12b1eb3e97bae72eb3c2c4e436499d41ff144cdfd1dcd0718df738304732
+kind: ImagesLock

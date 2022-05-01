@@ -1,0 +1,25 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: Package
+metadata:
+  name: nexus.niceneasy.ch.0.1.0
+spec:
+  refName: nexus.niceneasy.ch
+  version: 0.1.0
+  releaseNotes: "first PoC for tanzu packaging, provided as is"
+  licenses:
+    - "Apache 2.0"
+  template:
+    spec:
+      fetch:
+        - imgpkgBundle:
+            image: bluebossa63/nexus-tanzu-package@sha256:65baa1d6c9f9f1867f087433f3b4be661e2e5483e408a71b22ce96d5b19bdbd9
+      template:
+        - ytt:
+            paths:
+              - config/
+        - kbld:
+            paths:
+              - "-"
+              - .imgpkg/images.yml
+      deploy:
+      - kapp: {}

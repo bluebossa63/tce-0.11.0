@@ -1,0 +1,19 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:yaml", "yaml")
+#@ load("config.lib.yml", "config")
+
+#@overlay/match by=overlay.all,expects="1+"
+---
+metadata:
+  #@overlay/match missing_ok=True
+  namespace: #@ data.values.namespace
+
+#@ crb=overlay.subset({"kind":"ClusterRoleBinding"})
+#@ rb=overlay.subset({"kind":"RoleBinding"})
+#@overlay/match by=overlay.or_op(crb, rb), expects="0+"
+
+#@overlay/match by=overlay.subset({"kind": "ConfigMap", "metadata": {"name": "config"}})
+---
+data:
+  config: #@ yaml.encode(config())

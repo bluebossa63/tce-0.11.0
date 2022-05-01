@@ -1,0 +1,20 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: knative-serving-tls-cert
+  namespace: knative-serving
+spec:
+  commonName: knative-serving
+  dnsNames:
+  - knative-serving.ne.local
+  - \*.knative-serving.ne.local
+  duration: 87600h0m0s
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: niceneasy-ca
+  renewBefore: 360h0m0s
+  secretName: knative-serving-tls
+  usages:
+  - server auth
+  - client auth

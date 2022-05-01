@@ -1,0 +1,13 @@
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  name: microservices-demo
+  labels:
+    apps.tanzu.vmware.com/workload-type: web
+spec:
+  source:
+    git:
+      url: https://github.com/GoogleCloudPlatform/microservices-demo
+      ref:
+        branch: main
+    subPath: src/adservice

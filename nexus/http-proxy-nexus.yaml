@@ -1,0 +1,22 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  labels:
+    app: nexus
+  name: nexus-httpproxy
+  namespace: nexus
+spec:
+  routes:
+  - conditions:
+    - prefix: /
+    pathRewritePolicy:
+      replacePrefix:
+      - prefix: /
+        replacement: /
+    services:
+    - name: nexus-rm-nexus-repository-manager
+      port: 8081
+  virtualhost:
+    fqdn: nexus.ne.local
+    tls:
+      secretName: nexus-tls

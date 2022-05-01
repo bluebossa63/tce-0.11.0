@@ -1,0 +1,15 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: tanzu-admins
+subjects:
+  - kind: Group
+    name: CloudAdmins
+    apiGroup: rbac.authorization.k8s.io
+  - kind: User
+    name: Daniele
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io

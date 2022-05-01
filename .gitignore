@@ -5,3 +5,12 @@ log2.txt
 tools
 nfs
 createcluster.log
+pvc.yaml
+storageclass.yaml
+tanzu.code-workspace
+tce-0.11.0.tar
+vsphere.conf
+cluster-config/tph-test-deploy.yaml
+kpack/app-deployment.yaml
+kpack/harbor.ne.local.secret.yaml
+kpack/docker-secret.yaml

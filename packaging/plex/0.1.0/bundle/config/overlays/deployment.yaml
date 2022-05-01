@@ -1,0 +1,212 @@
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:data", "data")
+
+#@overlay/match by=overlay.all, expects="1+"
+#@overlay/append
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: plex-tls-cert
+  namespace: plex-mediaserver
+spec:
+  commonName: #@ data.values.fqdn
+  dnsNames:
+  - #@ data.values.fqdn
+  duration: 87600h0m0s
+  issuerRef:
+    group: cert-manager.io
+    kind: #@ data.values.issuerkind
+    name: #@ data.values.issuername
+  renewBefore: 360h0m0s
+  secretName: plex-tls
+  usages:
+  - server auth
+  - client auth
+
+#@overlay/match by=overlay.all, expects="1+"
+#@overlay/append
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mediaserver-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: nfs4
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: #@ data.values.nfspath
+    server: #@ data.values.nfsserver
+
+#@overlay/match by=overlay.all, expects="1+"
+#@overlay/append
+---
+apiVersion: kubealex.com/v1
+kind: K8SMediaserver
+metadata:
+  name: plex-mediaserver
+  namespace: 
+spec:
+  general: 
+    ingress_host: plex.ne.local
+    plex_ingress_host: plex.ne.local
+    image_tag: latest
+    puid: 1000
+    pgid: 1000
+    storage:
+      customVolume: false
+      pvcName: mediaserver-pvc
+      size: 10Gi
+      pvcStorageClass: "nfs4"
+      subPaths:
+        tv: media/tv
+        movies: media/movies
+        downloads: downloads    
+        transmission: transmission
+        sabnzbd: sabnzbd
+        config: config  
+      volumes: {}
+  sonarr:
+    enabled: true
+    container: 
+      nodeSelector: {}
+      port: 8989
+    service:
+      type: ClusterIP
+      port: 8989
+      nodePort: 
+      extraLBService: false 
+    ingress:
+      enabled: true
+      annotations: {}
+      path: /sonarr
+      tls:
+        enabled: true
+        secretName: "plex-tls"
+    resources: {}
+
+  radarr:
+    enabled: true
+    container: 
+      nodeSelector: {}
+      port: 7878
+    service:
+      type: ClusterIP
+      port: 7878
+      nodePort: 
+      extraLBService: false 
+    ingress:
+      enabled: true
+      annotations: {}
+      path: /radarr
+      tls:
+        enabled: true
+        secretName: "plex-tls"
+    resources: {}
+      
+  jackett:
+    enabled: true
+    container: 
+      nodeSelector: {}
+      port: 9117
+    service:
+      type: ClusterIP
+      port: 9117
+      nodePort: 
+      extraLBService: false 
+    ingress:
+      enabled: true
+      annotations: {}
+      path: /jackett
+      tls:
+        enabled: true
+        secretName: "plex-tls"
+    resources: {}
+    
+  transmission:
+    enabled: true
+    container: 
+      nodeSelector: {}
+      port: 
+        utp: 9091
+        peer: 51413
+    service:
+      utp:
+        type: ClusterIP
+        port: 9091
+        nodePort: 
+        extraLBService: false
+      peer:
+        type: ClusterIP
+        port: 51413
+        nodePort:
+        nodePortUDP: 
+        extraLBService: false
+    ingress:
+      enabled: true
+      annotations: {}
+      path: /transmission
+      tls:
+        enabled: true
+        secretName: "plex-tls"
+    config:
+      auth: 
+        enabled: false
+        username: ""
+        password: ""
+    resources: {}
+
+  sabnzbd:
+    enabled: true
+    container: 
+      nodeSelector: {}
+      port: 
+        http: 8080
+        https: 9090
+    service:
+      http:
+        type: ClusterIP
+        port: 8080
+        nodePort: 
+        extraLBService: false
+      https:
+        type: ClusterIP
+        port: 9090
+        nodePort:
+        extraLBService: false
+    ingress:
+      enabled: true
+      annotations: {}
+      path: /sabnzbd
+      tls:
+        enabled: true
+        secretName: "plex-tls"
+    resources: {}
+
+  plex:
+    enabled: true
+    claim: "t_DAWXFVqPfwFNNzJouH"
+    replicaCount: 1
+    container: 
+      nodeSelector: {}
+      port: 32400
+    service:
+      type: ClusterIP
+      port: 32400
+      nodePort: 
+      extraLBService: false 
+    ingress:
+      enabled: true
+      annotations: {}
+      tls:
+        enabled: true
+        secretName: "plex-tls"
+    resources: {}

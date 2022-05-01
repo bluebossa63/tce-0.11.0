@@ -1,0 +1,10 @@
+#@data/values
+---
+
+#! The namespace in which to deploy cert-manager.
+namespace: plex-mediaserver
+issuerkind: ClusterIssuer 
+issuername: niceneasy-ca
+fqdn: plex.ne.local
+nfspath: /exports/
+nfsserver: 192.168.0.39

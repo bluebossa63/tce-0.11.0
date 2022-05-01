@@ -1,0 +1,8 @@
+#@data/values
+---
+
+#! The namespace in which to deploy cert-manager.
+namespace: nexus
+issuerkind: ClusterIssuer 
+issuername: niceneasy-ca
+fqdn: nexus.ne.local

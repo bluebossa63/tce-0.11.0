@@ -1,0 +1,30 @@
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegeEscalation: false
+allowPrivilegedContainer: false
+allowedCapabilities: null
+apiVersion: security.openshift.io/v1
+fsGroup:
+  type: RunAsAny
+groups: 
+- system:cluster-admins
+kind: SecurityContextConstraints
+metadata:
+  name: metallb-scc
+requiredDropCapabilities:
+- NET_RAW
+readOnlyRootFilesystem: false
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: MustRunAs
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:serviceaccount:metallb-system:controller
+- system:serviceaccount:metallb-system:speaker
+volumes:
+- '*'

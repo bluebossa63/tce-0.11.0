@@ -1,0 +1,29 @@
+infrastructureProvider: vsphere
+namespace: projectcontour
+contour:
+  configFileContents: {}
+  replicas: 2
+  useProxyProtocol: false
+  logLevel: info
+envoy:
+  service:
+    type: "LoadBalancer"
+    loadBalancerIP: "192.168.0.208"
+    externalTrafficPolicy: "Cluster"
+    annotations: {}
+    nodePorts:
+      http: 0
+      https: 0
+    aws:
+      loadBalancerType: classic
+  hostPorts:
+    enable: false
+    http: 80
+    https: 443
+  hostNetwork: false
+  terminationGracePeriodSeconds: 300
+  logLevel: info
+certificates:
+  useCertManager: true
+  duration: 8760h
+  renewBefore: 360h

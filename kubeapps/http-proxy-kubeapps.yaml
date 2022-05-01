@@ -1,0 +1,22 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  labels:
+    app: kubeapps
+  name: kubeapps-httpproxy
+  namespace: kubeapps
+spec:
+  routes:
+  - conditions:
+    - prefix: /
+    pathRewritePolicy:
+      replacePrefix:
+      - prefix: /
+        replacement: /
+    services:
+    - name: kubeapps
+      port: 80
+  virtualhost:
+    fqdn: kubeapps.ne.local
+    tls:
+      secretName: kubeapps-tls

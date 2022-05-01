@@ -1,0 +1,58 @@
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:data", "data")
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    kubernetes.io/metadata.name: #@ data.values.namespace
+  name: #@ data.values.namespace
+
+---
+
+#@overlay/match by=overlay.all, expects="1+"
+#@overlay/append
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vault-tls-cert
+  namespace: vault
+spec:
+  commonName: #@ data.values.fqdn
+  dnsNames:
+  - #@ data.values.fqdn
+  duration: 87600h0m0s
+  issuerRef:
+    group: cert-manager.io
+    kind: #@ data.values.issuerkind
+    name: #@ data.values.issuername
+  renewBefore: 360h0m0s
+  secretName: vault-tls
+  usages:
+  - server auth
+  - client auth
+
+#@overlay/match by=overlay.all, expects="1+"
+#@overlay/append
+---
+
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  labels:
+    app: vault
+  name: vault-httpproxy
+  namespace: vault
+spec:
+  routes:
+  - conditions:
+    - prefix: /
+    services:
+    - name: tph-vault
+      port: 80
+  virtualhost:
+    fqdn: #@ data.values.fqdn
+    tls:
+      secretName: vault-tls

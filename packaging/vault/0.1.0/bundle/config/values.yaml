@@ -1,0 +1,8 @@
+#@data/values
+---
+
+#! The namespace in which to deploy cert-manager.
+namespace: vault
+issuerkind: ClusterIssuer 
+issuername: niceneasy-ca
+fqdn: vault.ne.local

@@ -1,0 +1,46 @@
+---
+apiVersion: imgpkg.carvel.dev/v1alpha1
+images:
+- annotations:
+    kbld.carvel.dev/id: hashicorp/vault-csi-provider:0.4.0
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: 0.4.0
+          url: hashicorp/vault-csi-provider:0.4.0
+  image: index.docker.io/hashicorp/vault-csi-provider@sha256:d8724dfcbfdefe25e5c6688f6d948fac7a6fee42a62c8c4f437932d30766a3f0
+- annotations:
+    kbld.carvel.dev/id: hashicorp/vault:1.9.2
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: 1.9.2
+          url: hashicorp/vault:1.9.2
+  image: index.docker.io/hashicorp/vault@sha256:ff9b17b0cefe86ebdc2e1efed9a626cc464145062d6bcbc56da34f2ef7be8d86
+- annotations:
+    kbld.carvel.dev/id: k8s.gcr.io/csi-secrets-store/driver-crds:v1.1.2
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v1.1.2
+          url: k8s.gcr.io/csi-secrets-store/driver-crds:v1.1.2
+  image: k8s.gcr.io/csi-secrets-store/driver-crds@sha256:9aa31710e6df5bacc238c6fd441abc66f1d5734ef5ca43dedfe784f4bfdb7fab
+- annotations:
+    kbld.carvel.dev/id: k8s.gcr.io/csi-secrets-store/driver:v1.1.2
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v1.1.2
+          url: k8s.gcr.io/csi-secrets-store/driver:v1.1.2
+  image: k8s.gcr.io/csi-secrets-store/driver@sha256:4df23dc3720360ec88136abddb3ab62eb2a7ed758722bc045485ab6d0bd43748
+- annotations:
+    kbld.carvel.dev/id: k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.5.0
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v2.5.0
+          url: k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.5.0
+  image: k8s.gcr.io/sig-storage/csi-node-driver-registrar@sha256:4fd21f36075b44d1a423dfb262ad79202ce54e95f5cbc4622a6c1c38ab287ad6
+- annotations:
+    kbld.carvel.dev/id: k8s.gcr.io/sig-storage/livenessprobe:v2.6.0
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v2.6.0
+          url: k8s.gcr.io/sig-storage/livenessprobe:v2.6.0
+  image: k8s.gcr.io/sig-storage/livenessprobe@sha256:406f59599991916d2942d8d02f076d957ed71b541ee19f09fc01723a6e6f5932
+kind: ImagesLock

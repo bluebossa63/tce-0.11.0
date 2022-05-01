@@ -1,0 +1,64 @@
+---
+apiVersion: imgpkg.carvel.dev/v1alpha1
+images:
+- annotations:
+    kbld.carvel.dev/id: ghcr.io/dexidp/dex:v2.30.2
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v2.30.2
+          url: ghcr.io/dexidp/dex:v2.30.2
+      - preresolved:
+          url: ghcr.io/dexidp/dex@sha256:27cf2e8644f2ea1ebc6de711b0ace4b5ee2d1f442e148eabbaa8c68308062475
+      - preresolved:
+          url: ghcr.io/dexidp/dex@sha256:27cf2e8644f2ea1ebc6de711b0ace4b5ee2d1f442e148eabbaa8c68308062475
+      - preresolved:
+          url: ghcr.io/dexidp/dex@sha256:27cf2e8644f2ea1ebc6de711b0ace4b5ee2d1f442e148eabbaa8c68308062475
+      - preresolved:
+          url: ghcr.io/dexidp/dex@sha256:27cf2e8644f2ea1ebc6de711b0ace4b5ee2d1f442e148eabbaa8c68308062475
+  image: ghcr.io/dexidp/dex@sha256:27cf2e8644f2ea1ebc6de711b0ace4b5ee2d1f442e148eabbaa8c68308062475
+- annotations:
+    kbld.carvel.dev/id: quay.io/argoproj/argocd-applicationset:v0.4.1
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v0.4.1
+          url: quay.io/argoproj/argocd-applicationset:v0.4.1
+      - preresolved:
+          url: quay.io/argoproj/argocd-applicationset@sha256:7433ff9dc5f4fccf13f71be514982740f32cd31707734ce8934f149d26163590
+      - preresolved:
+          url: quay.io/argoproj/argocd-applicationset@sha256:7433ff9dc5f4fccf13f71be514982740f32cd31707734ce8934f149d26163590
+      - preresolved:
+          url: quay.io/argoproj/argocd-applicationset@sha256:7433ff9dc5f4fccf13f71be514982740f32cd31707734ce8934f149d26163590
+      - preresolved:
+          url: quay.io/argoproj/argocd-applicationset@sha256:7433ff9dc5f4fccf13f71be514982740f32cd31707734ce8934f149d26163590
+  image: quay.io/argoproj/argocd-applicationset@sha256:7433ff9dc5f4fccf13f71be514982740f32cd31707734ce8934f149d26163590
+- annotations:
+    kbld.carvel.dev/id: quay.io/argoproj/argocd:v2.3.3
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v2.3.3
+          url: quay.io/argoproj/argocd:v2.3.3
+      - preresolved:
+          url: quay.io/argoproj/argocd@sha256:dd738f234fcdb0aac8631a0fd1aafbbcd86f936480b06e8377b033ef7a764f71
+      - preresolved:
+          url: quay.io/argoproj/argocd@sha256:dd738f234fcdb0aac8631a0fd1aafbbcd86f936480b06e8377b033ef7a764f71
+      - preresolved:
+          url: quay.io/argoproj/argocd@sha256:dd738f234fcdb0aac8631a0fd1aafbbcd86f936480b06e8377b033ef7a764f71
+      - preresolved:
+          url: quay.io/argoproj/argocd@sha256:dd738f234fcdb0aac8631a0fd1aafbbcd86f936480b06e8377b033ef7a764f71
+  image: quay.io/argoproj/argocd@sha256:dd738f234fcdb0aac8631a0fd1aafbbcd86f936480b06e8377b033ef7a764f71
+- annotations:
+    kbld.carvel.dev/id: redis:6.2.6-alpine
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: 6.2.6-alpine
+          url: redis:6.2.6-alpine
+      - preresolved:
+          url: index.docker.io/library/redis@sha256:132337b9d7744ffee4fae83f51de53c3530935ad3ba528b7110f2d805f55cbf5
+      - preresolved:
+          url: index.docker.io/library/redis@sha256:132337b9d7744ffee4fae83f51de53c3530935ad3ba528b7110f2d805f55cbf5
+      - preresolved:
+          url: index.docker.io/library/redis@sha256:132337b9d7744ffee4fae83f51de53c3530935ad3ba528b7110f2d805f55cbf5
+      - preresolved:
+          url: index.docker.io/library/redis@sha256:132337b9d7744ffee4fae83f51de53c3530935ad3ba528b7110f2d805f55cbf5
+  image: index.docker.io/library/redis@sha256:132337b9d7744ffee4fae83f51de53c3530935ad3ba528b7110f2d805f55cbf5
+kind: ImagesLock

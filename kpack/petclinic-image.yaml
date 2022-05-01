@@ -1,0 +1,35 @@
+apiVersion: kpack.io/v1alpha2
+kind: Builder
+metadata:
+  name: spring-petclinic-builder
+  namespace: default
+spec:
+  serviceAccountName: kpack-service-account
+  tag: harbor.ne.local/tph-local/spring-petclinic:1.0.0
+  stack:
+    name: base
+    kind: ClusterStack
+  store:
+    name: default
+    kind: ClusterStore
+  order:
+  - group:
+    - id: paketo-buildpacks/java
+  - group:
+    - id: paketo-buildpacks/nodejs
+---
+apiVersion: kpack.io/v1alpha2
+kind: Image
+metadata:
+  name: tutorial-image
+  namespace: default
+spec:
+  tag: harbor.ne.local/tph-local/spring-petclinic-builder:1.0.0
+  serviceAccountName: kpack-service-account
+  builder:
+    name: spring-petclinic-builder
+    kind: Builder
+  source:
+    git:
+      url: https://github.com/spring-projects/spring-petclinic
+      revision: 82cb521d636b282340378d80a6307a08e3d4a4c4

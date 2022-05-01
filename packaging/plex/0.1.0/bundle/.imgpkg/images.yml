@@ -1,0 +1,22 @@
+---
+apiVersion: imgpkg.carvel.dev/v1alpha1
+images:
+- annotations:
+    kbld.carvel.dev/id: gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v0.8.0
+          url: gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
+      - preresolved:
+          url: gcr.io/kubebuilder/kube-rbac-proxy@sha256:db06cc4c084dd0253134f156dddaaf53ef1c3fb3cc809e5d81711baa4029ea4c
+  image: gcr.io/kubebuilder/kube-rbac-proxy@sha256:db06cc4c084dd0253134f156dddaaf53ef1c3fb3cc809e5d81711baa4029ea4c
+- annotations:
+    kbld.carvel.dev/id: quay.io/kubealex/k8s-mediaserver-operator:v0.6
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v0.6
+          url: quay.io/kubealex/k8s-mediaserver-operator:v0.6
+      - preresolved:
+          url: quay.io/kubealex/k8s-mediaserver-operator@sha256:79e3041792c02b2db2d99f27438bbb26032c4dd69b13e535677b6edf87a589d2
+  image: quay.io/kubealex/k8s-mediaserver-operator@sha256:79e3041792c02b2db2d99f27438bbb26032c4dd69b13e535677b6edf87a589d2
+kind: ImagesLock

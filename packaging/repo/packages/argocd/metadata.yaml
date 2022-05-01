@@ -1,0 +1,16 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: PackageMetadata
+metadata:
+  name: argocd.niceneasy.ch
+spec:
+  displayName: argocd
+  longDescription: "argocd is a continouos delivery tool for kubernetes"
+  shortDescription: "an continouos delivery tool"
+  providerName: niceneasy.ch
+  maintainers:
+    - name: daniele.ulrich@niceneasy.ch
+  categories:
+    - ci/cd
+    - cicd
+    - CD 
+    - deployment

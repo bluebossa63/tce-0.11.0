@@ -1,0 +1,14 @@
+
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  name: angular-npm
+  labels:
+    apps.tanzu.vmware.com/workload-type: web
+spec:
+  source:
+    git:
+      url: https://github.com/paketo-buildpacks/samples
+      ref:
+        branch: mainkube
+    subPath: nodejs/angular-npm

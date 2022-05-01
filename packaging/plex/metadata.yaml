@@ -1,0 +1,13 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: PackageMetadata
+metadata:
+  name: plex.niceneasy.ch
+spec:
+  displayName: "Plex Operator"
+  longDescription: "plex-operator from https://github.com/kubealex/k8s-mediaserver-operator"
+  shortDescription: "plex-operator"
+  providerName: niceneasy.ch
+  maintainers:
+    - name: daniele.ulrich@niceneasy.ch
+  categories:
+    - media streaming

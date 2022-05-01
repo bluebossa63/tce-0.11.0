@@ -1,0 +1,16 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: PackageMetadata
+metadata:
+  name: nexus.niceneasy.ch
+spec:
+  displayName: "nexus from sonatype/nexus-repository-manager"
+  longDescription: | 
+    helm repo add sonatype https://sonatype.github.io/helm3-charts/
+    helm install nexus-rm sonatype/nexus-repository-manager --namespace nexus -f nexus/values.yaml --dry-run > packaging/jenkins/bundle/config/upstream/install.yaml
+  shortDescription: "sonatype/nexus-repository-manager"
+  providerName: niceneasy.ch
+  maintainers:
+    - name: daniele.ulrich@niceneasy.ch
+  categories:
+    - container management
+    - repository support

@@ -1,0 +1,11 @@
+domain:
+  type: real
+  name: knative-serving.ne.local
+ingress:
+  external:
+    namespace: projectcontour
+  internal:
+    namespace: projectcontour
+tls:
+  certmanager:
+    clusterissuer: niceneasy-ca

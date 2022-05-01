@@ -1,0 +1,45 @@
+apiVersion: carto.run/v1alpha1
+kind: ClusterTemplate
+metadata:
+  name: clarity-template-git-writer
+  namespace: default
+spec:
+  params:
+    - name: git_repository
+      default: github.com/example/example.git
+    - name: git_branch
+      default: main
+    - name: git_user_name
+      default: example            
+    - name: git_user_email
+      default: example@example.com
+    - name: git_commit_message
+      default: "Update app configuration"
+  template:
+    apiVersion: carto.run/v1alpha1
+    kind: Runnable # <=== the cluster template creates a runnable
+    metadata:
+      name: $(workload.metadata.name)$-git-writer
+    spec:
+      serviceAccountName: default
+      runTemplateRef:
+        name: tekton-taskrun # <=== the cluster run template that specifies the object to be created
+
+      inputs: # <=== these inputs are passed to the cluster run template
+        serviceAccount: default
+        taskRef:
+          kind: ClusterTask
+          name: git-writer
+        params:
+          - name: git_repository
+            value: $(params.git_repository)$
+          - name: git_branch
+            value: $(params.git_branch)$
+          - name: git_user_name
+            value: $(params.git_user_name)$
+          - name: git_user_email
+            value: $(params.git_user_email)$
+          - name: git_commit_message
+            value: $(params.git_commit_message)$
+          - name: git_files
+            value: $(config)$  # <=== here is the data, the config yaml

@@ -1,0 +1,27 @@
+#@ load("@ytt:overlay", "overlay")
+#@overlay/match by=overlay.subset({"kind": "Service", "metadata": {"name": "pinniped-supervisor", "namespace": "pinniped-supervisor"}})
+---
+#@overlay/replace
+spec:
+  type: LoadBalancer
+  selector:
+    app: pinniped-supervisor
+  ports:
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 8443
+
+#@ load("@ytt:overlay", "overlay")
+#@overlay/match by=overlay.subset({"kind": "Service", "metadata": {"name": "dexsvc", "namespace": "tanzu-system-auth"}}), missing_ok=True
+---
+#@overlay/replace
+spec:
+  type: LoadBalancer
+  selector:
+    app: dex
+  ports:
+    - name: dex
+      protocol: TCP
+      port: 443
+      targetPort: https

@@ -1,0 +1,261 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: registry-credentials
+type: kubernetes.io/dockerconfigjson
+stringData:
+  .dockerconfigjson: | 
+    {"auths":{"harbor.ne.local":{"auth":"*****************************"},"https://index.docker.io/v1/":{"auth":"******************************"}}}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kpack-service-account
+  namespace: default
+secrets:
+- name: registry-credentials
+imagePullSecrets:
+- name: registry-credentials
+---
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStack
+metadata:
+  name: base
+spec:
+  id: io.buildpacks.stacks.bionic
+  buildImage:
+    image: paketobuildpacks/build:base-cnb
+  runImage:
+    image: paketobuildpacks/run:base-cnb
+---
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStack
+metadata:
+  name: full
+spec:
+  id: io.buildpacks.stacks.bionic
+  buildImage:
+    image: paketobuildpacks/build:full-cnb
+  runImage:
+    image: paketobuildpacks/run:full-cnb
+---
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStore
+metadata:
+  name: default
+spec:
+  sources:
+  - image: gcr.io/paketo-buildpacks/java:latest
+  - image: gcr.io/paketo-buildpacks/nodejs:latest
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterImageTemplate
+metadata:
+  name: image
+spec:
+  params:
+  - name: image_prefix
+    default: harbor.ne.local/tph-local/
+  imagePath: .status.latestImage
+  template:
+    apiVersion: kpack.io/v1alpha2
+    kind: Image
+    metadata:
+      name: $(workload.metadata.name)$
+    spec:
+      tag: $(params.image_prefix)$$(workload.metadata.name)$
+      serviceAccountName: kpack-service-account
+      builder:
+        kind: Builder
+        name: builder
+      source:
+        blob:
+          url: $(sources.source.url)$
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterSourceTemplate
+metadata:
+  name: source
+spec:
+  urlPath: .status.artifact.url
+  revisionPath: .status.artifact.revision
+  template:
+    apiVersion: source.toolkit.fluxcd.io/v1beta1
+    kind: GitRepository
+    metadata:
+      name: $(workload.metadata.name)$
+    spec:
+      interval: 1m0s
+      url: $(workload.spec.source.git.url)$
+      ref: $(workload.spec.source.git.ref)$
+      gitImplementation: libgit2
+      ignore: ""
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterTemplate
+metadata:
+  name: app-deploy
+spec:
+  template:
+    apiVersion: kappctrl.k14s.io/v1alpha1
+    kind: App
+    metadata:
+      name: $(workload.metadata.name)$
+    spec:
+      serviceAccountName: workload-user-sa
+      fetch:
+      - inline:
+          paths:
+            manifest.yml: |
+              ---
+              apiVersion: kapp.k14s.io/v1alpha1
+              kind: Config
+              rebaseRules:
+                - path:
+                    - metadata
+                    - annotations
+                    - serving.knative.dev/creator
+                  type: copy
+                  sources: [new, existing]
+                  resourceMatchers: &matchers
+                    - apiVersionKindMatcher:
+                        apiVersion: serving.knative.dev/v1
+                        kind: Service
+                - path:
+                    - metadata
+                    - annotations
+                    - serving.knative.dev/lastModifier
+                  type: copy
+                  sources: [new, existing]
+                  resourceMatchers: *matchers
+              ---
+              apiVersion: serving.knative.dev/v1
+              kind: Service
+              metadata:
+                name: $(workload.metadata.name)$
+              spec:
+                template:
+                  metadata:
+                    annotations:
+                      autoscaling.knative.dev/minScale: "1"
+                  spec:
+                    serviceAccountName: workload-user-sa
+                    containers:
+                      - name: workload
+                        image: $(images.image.image)$
+                        securityContext:
+                          runAsUser: 1000
+      template:
+      - ytt: {}
+      deploy:
+      - kapp: {}
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterTemplate
+metadata:
+  name: app-deploy-k8s
+spec:
+  template:
+    apiVersion: kappctrl.k14s.io/v1alpha1
+    kind: App
+    metadata:
+      name: $(workload.metadata.name)$
+    spec:
+      serviceAccountName: workload-user-sa
+      fetch:
+      - inline:
+          paths:
+            manifest.yml: |
+              ---
+              apiVersion: cert-manager.io/v1
+              kind: Certificate
+              metadata:
+                name: $(workload.metadata.name)$-tls-cert
+                namespace: default
+                labels:
+                  app.kubernetes.io/component: certificate
+                  app.kubernetes.io/name: $(workload.metadata.name)$
+                  app.kubernetes.io/part-of: $(workload.metadata.name)$-applicationset
+              spec:
+                commonName: $(workload.metadata.name)$.ne.local
+                dnsNames:
+                - $(workload.metadata.name)$.ne.local
+                duration: 87600h0m0s
+                issuerRef:
+                  group: cert-manager.io
+                  kind: ClusterIssuer
+                  name: niceneasy-ca
+                renewBefore: 360h0m0s
+                secretName: $(workload.metadata.name)$-tls
+                usages:
+                - server auth
+                - client auth
+              ---
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                labels:
+                  app.kubernetes.io/component: controller
+                  app.kubernetes.io/name: $(workload.metadata.name)$
+                  app.kubernetes.io/part-of: $(workload.metadata.name)$-applicationset
+                name: $(workload.metadata.name)$-controller
+                namespace: default  
+              spec:
+                selector:
+                  matchLabels:
+                    app.kubernetes.io/name: $(workload.metadata.name)$-controller
+                template:
+                  metadata:
+                    labels:
+                      app.kubernetes.io/name: $(workload.metadata.name)$-controller
+                  spec:
+                    containers:
+                    - image: $(images.image.image)$
+                      imagePullPolicy: Always
+                      name: $(workload.metadata.name)$-controller
+                      ports:
+                      - containerPort: 8080
+                        name: http
+                        protocol: TCP
+                    serviceAccountName: workload-user-sa
+              ---
+              apiVersion: v1
+              kind: Service
+              metadata:
+                labels:
+                  app.kubernetes.io/component: controller
+                  app.kubernetes.io/name: $(workload.metadata.name)$
+                  app.kubernetes.io/part-of: $(workload.metadata.name)$-applicationset
+                name: $(workload.metadata.name)$-service
+                namespace: default
+              spec:
+                ports:
+                - name: http
+                  port: 80
+                  protocol: TCP
+                  targetPort: 8080
+                selector:
+                  app.kubernetes.io/name: $(workload.metadata.name)$-controller
+              ---
+              apiVersion: projectcontour.io/v1
+              kind: HTTPProxy
+              metadata:
+                labels:
+                  app.kubernetes.io/component: httpproxy
+                  app.kubernetes.io/name: $(workload.metadata.name)$
+                  app.kubernetes.io/part-of: $(workload.metadata.name)$-applicationset
+                name: $(workload.metadata.name)$-httpproxy
+                namespace: default
+              spec:
+                virtualhost:
+                  fqdn: $(workload.metadata.name)$.ne.local
+                  tls:
+                    secretName: $(workload.metadata.name)$-tls
+                routes:
+                  - services:
+                    - name: $(workload.metadata.name)$-service
+                      port: 80
+      template:
+      - ytt: {}
+      deploy:
+      - kapp: {}

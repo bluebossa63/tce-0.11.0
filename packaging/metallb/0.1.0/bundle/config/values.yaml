@@ -1,0 +1,6 @@
+#@data/values
+---
+
+#! The namespace in which to deploy cert-manager.
+namespace: metallb-system
+ip_pool: 192.168.0.208/28

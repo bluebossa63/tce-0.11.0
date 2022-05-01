@@ -1,0 +1,25 @@
+---
+apiVersion: imgpkg.carvel.dev/v1alpha1
+images:
+- annotations:
+    kbld.carvel.dev/id: bluebossa63/argocd-tanzu-package@sha256:ab0744d0886f18be6d6f275733792eb44db0d73368b916514ea8d13c38bdf751
+  image: index.docker.io/bluebossa63/argocd-tanzu-package@sha256:ab0744d0886f18be6d6f275733792eb44db0d73368b916514ea8d13c38bdf751
+- annotations:
+    kbld.carvel.dev/id: bluebossa63/dev-tools-tanzu-package@sha256:57114a80510a1b492da531e54528d25813ad6924cc9f37e1f38cea800389478a
+  image: index.docker.io/bluebossa63/dev-tools-tanzu-package@sha256:57114a80510a1b492da531e54528d25813ad6924cc9f37e1f38cea800389478a
+- annotations:
+    kbld.carvel.dev/id: bluebossa63/jenkins-tanzu-package@sha256:789b8a1169d44d3ca55ceab46fe8ce88994fbe7d68538a3e925ac976d6e1603a
+  image: index.docker.io/bluebossa63/jenkins-tanzu-package@sha256:789b8a1169d44d3ca55ceab46fe8ce88994fbe7d68538a3e925ac976d6e1603a
+- annotations:
+    kbld.carvel.dev/id: bluebossa63/metallb-tanzu-package@sha256:039efe7ea50935eb90089f2d9314e114fd2fa4792534b7e123195489d1b878b5
+  image: index.docker.io/bluebossa63/metallb-tanzu-package@sha256:039efe7ea50935eb90089f2d9314e114fd2fa4792534b7e123195489d1b878b5
+- annotations:
+    kbld.carvel.dev/id: bluebossa63/nexus-tanzu-package@sha256:c1b59b2493613dca4db38a185ec823573f16103e5462e0ba8cb70005284b78f1
+  image: index.docker.io/bluebossa63/nexus-tanzu-package@sha256:c1b59b2493613dca4db38a185ec823573f16103e5462e0ba8cb70005284b78f1
+- annotations:
+    kbld.carvel.dev/id: bluebossa63/plex-tanzu-package@sha256:67f8a22182207ad2a94c262876de8acac89b0d727a8936ac0b4cf70d0e0a9f53
+  image: index.docker.io/bluebossa63/plex-tanzu-package@sha256:67f8a22182207ad2a94c262876de8acac89b0d727a8936ac0b4cf70d0e0a9f53
+- annotations:
+    kbld.carvel.dev/id: bluebossa63/vault-tanzu-package@sha256:f3a1cb9f2b29eaf2fba1c2bc40049ea63e69cbfff90d421c0458cbeddbbfebcf
+  image: index.docker.io/bluebossa63/vault-tanzu-package@sha256:f3a1cb9f2b29eaf2fba1c2bc40049ea63e69cbfff90d421c0458cbeddbbfebcf
+kind: ImagesLock
