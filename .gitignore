@@ -1,0 +1,7 @@
+.knative
+.vscode
+log.txt
+log2.txt
+tools
+nfs
+createcluster.log
