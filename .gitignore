@@ -14,3 +14,4 @@ cluster-config/tph-test-deploy.yaml
 kpack/app-deployment.yaml
 kpack/harbor.ne.local.secret.yaml
 kpack/docker-secret.yaml
+plex/install.log
