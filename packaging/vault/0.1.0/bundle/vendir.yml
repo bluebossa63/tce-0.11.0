@@ -1,0 +1,19 @@
+apiVersion: vendir.k14s.io/v1alpha1
+kind: Config
+minimumRequiredVersion: 0.12.0
+directories:
+  - path: config/helmchart-vault
+    contents:
+      - path: .
+        helmChart:
+          name: vault
+          version: v0.19.0
+          repository:
+            url: https://helm.releases.hashicorp.com        
+  - path: config/helmchart-csi-driver
+    contents:
+      - path: .
+        helmChart:
+          name: secrets-store-csi-driver
+          repository:
+            url: https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts            

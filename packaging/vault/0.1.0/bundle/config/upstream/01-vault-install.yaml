@@ -1,77 +1,35 @@
-# Source: vault/templates/tests/server-test.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: "hashicorp-vault-server-test"
-  namespace: default
-  annotations:
-    "helm.sh/hook": test
-spec:
-  
-  containers:
-    - name: hashicorp-vault-server-test
-      image: hashicorp/vault:1.9.2
-      imagePullPolicy: IfNotPresent
-      env:
-        - name: VAULT_ADDR
-          value: http://hashicorp-vault.default.svc:8200
-        
-      command:
-        - /bin/sh
-        - -c
-        - |
-          echo "Checking for sealed info in 'vault status' output"
-          ATTEMPTS=10
-          n=0
-          until [ "$n" -ge $ATTEMPTS ]
-          do
-            echo "Attempt" $n...
-            vault status -format yaml | grep -E '^sealed: (true|false)' && break
-            n=$((n+1))
-            sleep 5
-          done
-          if [ $n -ge $ATTEMPTS ]; then
-            echo "timed out looking for sealed info in 'vault status' output"
-            exit 1
-          fi
-
-          exit 0
-      volumeMounts:
-  volumes:
-  restartPolicy: Never
-MANIFEST:
 ---
 # Source: vault/templates/csi-serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: hashicorp-vault-csi-provider
-  namespace: default
+  name: vault-csi-provider
+  namespace: nexus
   labels:
     app.kubernetes.io/name: vault-csi-provider
-    app.kubernetes.io/instance: hashicorp-vault
+    app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
 ---
 # Source: vault/templates/server-serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: hashicorp-vault
-  namespace: default
+  name: vault
+  namespace: nexus
   labels:
     helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
-    app.kubernetes.io/instance: hashicorp-vault
+    app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
 ---
 # Source: vault/templates/csi-clusterrole.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: hashicorp-vault-csi-provider-clusterrole
+  name: vault-csi-provider-clusterrole
   labels:
     app.kubernetes.io/name: vault-csi-provider
-    app.kubernetes.io/instance: hashicorp-vault
+    app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -85,29 +43,29 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: hashicorp-vault-csi-provider-clusterrolebinding
+  name: vault-csi-provider-clusterrolebinding
   labels:
     app.kubernetes.io/name: vault-csi-provider
-    app.kubernetes.io/instance: hashicorp-vault
+    app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: hashicorp-vault-csi-provider-clusterrole
+  name: vault-csi-provider-clusterrole
 subjects:
 - kind: ServiceAccount
-  name: hashicorp-vault-csi-provider
-  namespace: default
+  name: vault-csi-provider
+  namespace: nexus
 ---
 # Source: vault/templates/server-clusterrolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: hashicorp-vault-server-binding
+  name: vault-server-binding
   labels:
     helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
-    app.kubernetes.io/instance: hashicorp-vault
+    app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -115,20 +73,20 @@ roleRef:
   name: system:auth-delegator
 subjects:
 - kind: ServiceAccount
-  name: hashicorp-vault
-  namespace: default
+  name: vault
+  namespace: nexus
 ---
 # Source: vault/templates/server-headless-service.yaml
 # Service for Vault cluster
 apiVersion: v1
 kind: Service
 metadata:
-  name: hashicorp-vault-internal
-  namespace: default
+  name: vault-internal
+  namespace: nexus
   labels:
     helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
-    app.kubernetes.io/instance: hashicorp-vault
+    app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
   annotations:
 
@@ -144,7 +102,7 @@ spec:
       targetPort: 8201
   selector:
     app.kubernetes.io/name: vault
-    app.kubernetes.io/instance: hashicorp-vault
+    app.kubernetes.io/instance: vault
     component: server
 ---
 # Source: vault/templates/server-service.yaml
@@ -152,12 +110,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hashicorp-vault
-  namespace: default
+  name: vault
+  namespace: nexus
   labels:
     helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
-    app.kubernetes.io/instance: hashicorp-vault
+    app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
   annotations:
 
@@ -174,18 +132,18 @@ spec:
       targetPort: 8201
   selector:
     app.kubernetes.io/name: vault
-    app.kubernetes.io/instance: hashicorp-vault
+    app.kubernetes.io/instance: vault
     component: server
 ---
 # Source: vault/templates/csi-daemonset.yaml
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: hashicorp-vault-csi-provider
-  namespace: default
+  name: vault-csi-provider
+  namespace: nexus
   labels:
     app.kubernetes.io/name: vault-csi-provider
-    app.kubernetes.io/instance: hashicorp-vault
+    app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
   
 spec:
@@ -194,15 +152,15 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: vault-csi-provider
-      app.kubernetes.io/instance: hashicorp-vault
+      app.kubernetes.io/instance: vault
   template:
     metadata:
       labels:
         app.kubernetes.io/name: vault-csi-provider
-        app.kubernetes.io/instance: hashicorp-vault
+        app.kubernetes.io/instance: vault
       
     spec:
-      serviceAccountName: hashicorp-vault-csi-provider
+      serviceAccountName: vault-csi-provider
       containers:
         - name: vault-csi-provider
           
@@ -248,14 +206,14 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: hashicorp-vault
-  namespace: default
+  name: vault
+  namespace: nexus
   labels:
     app.kubernetes.io/name: vault
-    app.kubernetes.io/instance: hashicorp-vault
+    app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
 spec:
-  serviceName: hashicorp-vault-internal
+  serviceName: vault-internal
   podManagementPolicy: Parallel
   replicas: 1
   updateStrategy:
@@ -263,21 +221,21 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: vault
-      app.kubernetes.io/instance: hashicorp-vault
+      app.kubernetes.io/instance: vault
       component: server
   template:
     metadata:
       labels:
         helm.sh/chart: vault-0.19.0
         app.kubernetes.io/name: vault
-        app.kubernetes.io/instance: hashicorp-vault
+        app.kubernetes.io/instance: vault
         component: server
     spec:
       
       
       
       terminationGracePeriodSeconds: 10
-      serviceAccountName: hashicorp-vault
+      serviceAccountName: vault
       
       securityContext:
         runAsNonRoot: true
@@ -332,7 +290,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: VAULT_CLUSTER_ADDR
-              value: "https://$(HOSTNAME).hashicorp-vault-internal:8201"
+              value: "https://$(HOSTNAME).vault-internal:8201"
             - name: HOME
               value: "/home/vault"
             
@@ -383,3 +341,45 @@ spec:
                   # to this pod while it's terminating
                   "sleep 5 && kill -SIGTERM $(pidof vault)",
                 ]
+---
+# Source: vault/templates/tests/server-test.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "vault-server-test"
+  namespace: nexus
+  annotations:
+    "helm.sh/hook": test
+spec:
+  
+  containers:
+    - name: vault-server-test
+      image: hashicorp/vault:1.9.2
+      imagePullPolicy: IfNotPresent
+      env:
+        - name: VAULT_ADDR
+          value: http://vault.nexus.svc:8200
+        
+      command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Checking for sealed info in 'vault status' output"
+          ATTEMPTS=10
+          n=0
+          until [ "$n" -ge $ATTEMPTS ]
+          do
+            echo "Attempt" $n...
+            vault status -format yaml | grep -E '^sealed: (true|false)' && break
+            n=$((n+1))
+            sleep 5
+          done
+          if [ $n -ge $ATTEMPTS ]; then
+            echo "timed out looking for sealed info in 'vault status' output"
+            exit 1
+          fi
+
+          exit 0
+      volumeMounts:
+  volumes:
+  restartPolicy: Never

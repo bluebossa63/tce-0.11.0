@@ -15,3 +15,4 @@ kpack/app-deployment.yaml
 kpack/harbor.ne.local.secret.yaml
 kpack/docker-secret.yaml
 plex/install.log
+packaging/vault/0.1.0/bundle/vendir.lock.yml
