@@ -11,5 +11,5 @@ spec:
         #@overlay/match by=overlay.all, expects="1+"
         -
           #@overlay/match missing_ok=True
-          nameservers: ["192.0.0.9"]
+          nameservers: ["192.168.0.9"]
           searchDomains: ["ne.local"]

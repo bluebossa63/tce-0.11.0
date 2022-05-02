@@ -18,8 +18,6 @@ spec:
         path: /etc/ssl/certs/tkg-custom-ca.pem
     #@overlay/match missing_ok=True
     preKubeadmCommands:
-      #! remedy against temporary name resolution problem: 
-      - echo "192.168.0.192   harbor.ne.local" >>/etc/hosts
       #! For Photon OS
       #@overlay/append
       - '! which rehash_ca_certificates.sh 2>/dev/null || rehash_ca_certificates.sh'

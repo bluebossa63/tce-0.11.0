@@ -41,7 +41,7 @@ Domains=ne.local
 
 systemctl restart systemd-resolved.service
 ```
-I set the DNS and the domains explicitely. That's another task that could be done by using the templating mechanism of tanzu cluster creation.
+I set the DNS and the domains explicitely. That's another task that could be done by using the templating mechanism of [tanzu cluster creation](https://github.com/bluebossa63/tce-0.11.0/blob/master/blogs/part%201/blog-1.md#use-a-local-domain).
 
 ### Further Reading
 

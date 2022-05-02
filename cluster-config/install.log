@@ -72,8 +72,6 @@ tanzu package install kpack --package-name kpack.community.tanzu.vmware.com --ve
 
 jq -c . < ~/.docker/config.json | base64 -w0 && echo
 
-Attention: add harbor.ne.local to the /etc/hosts file. There is a problem with "Temporary failure in name resolution"   
-
 
 TEKTON_VERSION=0.34.1
 daniele@kubuntu:~/dev/clarity-template$ kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/previous/v$TEKTON_VERSION/release.yaml
