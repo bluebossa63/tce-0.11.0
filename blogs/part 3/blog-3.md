@@ -97,9 +97,9 @@ If you see something similar with the registry and the tag of your choice, you'r
 kubectl describe builder <name>
 ```
 
-to get more clues about the cause. I had a lot of certificate exceptions here when using my self-signed certificates. If you're using a public repository, you avoid this kind of trouble completely. Might be easier for beginners but you won't be able to use your own repository this way.
+to get more clues about the cause. I had a lot of certificate exceptions here when using my self-signed certificates. If you're using a public repository, you avoid this kind of trouble completely. Might be easier to begin with but you won't be able to use your own repository this way.
 
-So if it does not work right from the start I recommend reading the [repository conventions](../../README.md) and check, if you really have adapted everything that is necessary. For the building process watch out for the following details:
+So if it does not work right from the start I recommend reading the [repository conventions](https://github.com/bluebossa63/tce-0.11.0/blob/master/README.md#repository-conventions) and check, if you really have adapted everything that is necessary. For the building process watch out for the following details:
 
 ```bash
 kpack/kpack-values.yaml
@@ -181,3 +181,7 @@ We have 3 build steps: fetch the source, build the image, deploy the container.
 The deploy step links to the ClusterTemplate with the name "app-deploy" - and, you guessed it, my supplychain links to "app-deploy-k8s" in  [kpack-templates.yaml](../../kpack/kpack-templates.yaml).
 
 The first two steps are basically unchanged. I only changed the deployment step just by adding a new ClusterTemplate with the standard kubernetes manifest definitions for deployment, certificate and httpproxy (contour ingress).
+
+As it is so easy to get the contents of a git repo deployed, I have created some additional samples to test the limits. A very interesting use case is the [google microservice sample](../../kpack/google-web-services-demo.yaml)...
+
+Google introduces with [scaffold](https://skaffold.dev/) yet another build tool and has in this case a rather complicated 10-tier microservices application architecture in one repo. Of course it is possible to give subPath in the git source - but are all services rebuild when only on subpath has a change? And how could the *service bindings* be managed between the single images that are modeled with kpack? 
