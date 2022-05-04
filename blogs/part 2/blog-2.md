@@ -79,23 +79,9 @@ tanzu package repository add niceneasy.ch --url bluebossa63/dev-tools-tanzu-pack
 ```
 installs the result onto your cluster provided as is. Honestly, I took the shortcut and did not externalize a lot of configuration values. It was more a test of the overall handling for me. But everything lays there and should be easily adaptable.
 
-## Some feedback on the Tanzu tooling
+The official TCE packages can be found [here](https://github.com/vmware-tanzu/community-edition/tree/main/addons). That's also an alternative if you want to check the values file - in this case for [grafana 7.5.7](https://github.com/vmware-tanzu/community-edition/blob/main/addons/packages/grafana/7.5.7/bundle/config/values.yaml).
 
-I had some issues setting the registry credentials correctly and honestly, I did not fully understand the concept of this redundancy in holding secrets in plain k8s or via tanzu utilities. And honestly, sometimes it really gets a bit weird:
 
-tanzu apps workload create -f workload.yaml
-
-is the same as
-
-kubectl apply -f workload.yaml
-
-I question the effort to create such redundancies, why not stick to the concept to use CRDs directly. This is also my preferred way to create workload clusters. I have seen the same development on openshift installations: a bunch of tools is evolving to address tasks like registry mirroring for air-gapped environments together with catalog-management. I have the impression the different players are not collaborating to standardize more - this could backfire by adding even more complexity if you want to support all packaging implementations or you have to support multiple vendors.
-
-Something different are utilities like
-
-kp build logs <build-name>
-
-aggregating the logs is very handy in this case.
 
 
 

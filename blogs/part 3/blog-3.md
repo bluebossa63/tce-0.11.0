@@ -18,6 +18,8 @@ This is the description of the latest version (0.2.0), I was working with 0.1.0:
 
 cert-manager is creating a bootstrap problem, if you want to enforce a common custom CA. You have to keep the sequence to first install the cert-manager, then create secrets and clusterissuers. In my tests with 0.1.0 the installation failed because of cert-manager as well. I am not sure if the installation sequence is correctly designed or enforced. But you can exclude packages from beeing installed with the bundle, that's how I could meet my requirement of a custom CA.
 
+## app-toolkit Installation
+
 *The files I am referencing throughout my blog post can be found [here](https://github.com/bluebossa63/tce-0.11.0).*
 
 I first installed cert-manager manually
@@ -41,11 +43,13 @@ tanzu package install app-toolkit --package-name app-toolkit.community.tanzu.vmw
 #don't forget to take this one if you're planning to use i.e. harbor registry with your custom CA
 tanzu package install cert-injection-webhook --package-name cert-injection-webhook.community.tanzu.vmware.com --version 0.1.0 -f ./cert-injection-webhook/cert-injection-webhook-config-values.yaml
 ```
-If you are prepared so far you can now go ahead with the tests proposed in the documentation. They are based on [this repository](https://github.com/cgsamp/tanzu-simple-web-app) defining a simple spring boot web app. Simply fork it and use it for your tests with your personal fork. In the end you will have the app automatically rebuild and deployed - short time after you commited something to the main branch.
+## Post-Deployment Tasks
 
-If you are already working with my repository, you can rely on my files as well, you'll find them all in the [kpack](../../kpack/) directory. So let me add to the documentation with all what I have learned so far. The version 0.2.0 of the app-toolkit lists Cartographer-Catalog and kpack-dependencies - I think this is very promising and worth a follow-up. It is really a lot of tooling you will have to learn to get comfortable with. The main promise of this philosophy is that you can simply state a git repo and some build packs will find the best way to deploy your workload. Let's start with the basics before we're trying to touch the limits...
+If you are prepared so far you can now go ahead with the tests proposed in the documentation. They are based on [this repository](https://github.com/cgsamp/tanzu-simple-web-app) defining a simple spring boot web app. Simply fork it and use it for your tests with your personal fork. In the end you will have the app automatically rebuild and deployed - short time after you commited something to the main branch. You just have to change one line, check out the last paragraph of the readme.
 
-I followed the [documentation of version 0.1.0](https://tanzucommunityedition.io/docs/main/package-readme-app-toolkit-0.1.0/) and recommend the one of [kpack](https://tanzucommunityedition.io/docs/main/package-readme-kpack-0.5.1/) and did a extended version:
+If you are already working with my repository, you can rely on my files as well, you'll find them all in the [kpack](../../kpack/) directory. So let me add to the documentation with all what I have learned so far. The version 0.2.0 of the app-toolkit lists Cartographer-Catalog and kpack-dependencies - I think this is very promising and worth a follow-up. It is really a lot of tooling to get comfortable with to use it efficiently. The main promise of this philosophy is that you can simply state a git repo and some build packs will find the best way to deploy your workload. Let's start with the basics before we're trying to touch the limits...
+
+I followed the [documentation of version 0.1.0](https://tanzucommunityedition.io/docs/v0.11/package-readme-app-toolkit-0.1.0/) and recommend the one of [kpack](https://tanzucommunityedition.io/docs/v0.11/package-readme-kpack-0.5.1/) and did a extended version:
 
 Prepare rbac.yml:
 
@@ -107,16 +111,73 @@ kpack/kpack-templates.yaml
     default: harbor.ne.local/tph-local/
 ```
 Here you need to decide which directory you want to use and set the parameters accordingly together with valid registry credentials.
-Again: using your own directory might come with the price of custom CAs.
+Again: if you want to use your own directory you have to prepare custom CAs.
 
+## Principles
 
+I invested quite some work to demo the basic functionality by changing or adding some of the definitions. Each of these components are quite powerful and documented. Let me add the following overall summary description.
 
+*Contour* and *cert-manager* are not build tools but very important infrastructure components for ingress and certificate managers.
 
+*Knative-Serving* offers a very easy publication of containers without bothering about kubernetes manifests or ingress definitions. It uses a wildcard domain and works with hostname based routing. 
 
-https://www.hashicorp.com/blog/manage-kubernetes-secrets-for-flux-with-hashicorp-vault
+*Cartographer* is the work flow engine orchestrating the steps defined in abstractions that are implemented in this app-toolkit with *kpack* and *Flux CD Source Controller*. [supplychain.yaml](../../kpack/supplychain.yaml) is the one from the documentation, [supplychain2.yaml](../../kpack/supplychain2.yaml) a variant I want to use to show how it works in detail. 
 
-https://secrets-store-csi-driver.sigs.k8s.io/topics/sync-as-kubernetes-secret.html
+The original supplychain is designed to build from a repository and publish the container with Knative-Serving. My version uses my [Clarity template](https://github.com/bluebossa63/clarity-template), an angular app that uses the [Clarity Framework](https://clarity.design/) - something that might look familiar to you...
 
+The supplychains are triggered either by installing them or if when the last commit hash of the repo has changed. You can install a [workload](../../kpack/workload.yaml) by cli
 
+```bash
+tanzu apps workload create -f ./kpack/workload.yaml
 
+OR
 
+kubectl apply -f ./kpack/workload.yaml
+```
+The workload definition consists simply of a source definition (here: git) and an important tag:
+
+<pre>apps.tanzu.vmware.com/workload-type: web</pre>
+
+This tag gets served by a supplychain with the correspondent selector:
+
+<pre>  selector:
+    apps.tanzu.vmware.com/workload-type: web</pre>
+
+My variant works with the tag web-k8s on which my supplychain is listening.
+
+Setting up my environment with [kpack-templates.yaml](../../kpack/kpack-templates.yaml) defines all the prerequisites to process a supplychain:
+
+- ClusterStack and ClusterStore from *kpack* are defining which build packs should be used. Build packs are analyzing code and automatically detect programming langauges and target configurations.
+- ClusterImageTemplate, ClusterSourceTemplate from cartographer are defining how to instantiate Images and Sources
+- ClusterTemplate from cartographer is the most interesting one, here you'll find the tags again - original sample, my version....
+```bash
+app-deploy
+app-deploy-k8s
+```
+- ServiceAccounts, Credentials...
+
+Let's inspect the main part of the supplychain definition:
+```yaml
+  resources:
+  - name: source-provider
+    ...
+  - name: image-builder
+    ...
+  - name: deployer
+    ...
+```
+
+We have 3 build steps: fetch the source, build the image, deploy the container.
+
+```yaml
+  - name: deployer
+    templateRef:
+      kind: ClusterTemplate
+      name: app-deploy
+    images:
+    - resource: image-builder
+      name: image
+```
+The deploy step links to the ClusterTemplate with the name "app-deploy" - and, you guessed it, my supplychain links to "app-deploy-k8s" in  [kpack-templates.yaml](../../kpack/kpack-templates.yaml).
+
+The first two steps are basically unchanged. I only changed the deployment step just by adding a new ClusterTemplate with the standard kubernetes manifest definitions for deployment, certificate and httpproxy (contour ingress).
