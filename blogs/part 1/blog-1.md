@@ -112,7 +112,7 @@ Stay tuned for the documentation and the full example. Reliable automation requi
 
 &nbsp;
 
-*And thanks for the aknowledgement as an vExpert Application Modernization!*
+*And thanks for the acknowledgement as an vExpert Application Modernization!*
 <table style="border:none">
 <tbody>
 <tr style="border:none">
