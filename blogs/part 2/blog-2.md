@@ -72,12 +72,12 @@ OK, now I had some additional tools on the plate to create the management cluste
 - jenkins (nice to have)
 - plex (just for fun)
 
-So I decided to try out the package management system proposed by TCE. You will find my test [here](../../packaging/), just cd in and try it out yourself following [the documentation](https://tanzucommunityedition.io/docs/v0.11/package-creation-step-by-step/). Again: subject of automation if you want to do continuous delivery of external sources of manifests.
+So I decided to try out the package management system proposed by TCE. You will find my test [here](../../packaging/), just cd in and try it out yourself following [the documentation](https://tanzucommunityedition.io/docs/v0.11/package-creation-step-by-step/). Again: subject to automation if you want to do continuous delivery of external sources of manifests. A first try converting helm on the fly by the help of vendir and a bash script can be found [here](../../packaging/vault/0.1.0/build.sh).
 
 ```bash
 tanzu package repository add niceneasy.ch --url bluebossa63/dev-tools-tanzu-package:0.1.0 --namespace tanzu-package-repo-global
 ```
-installes the result onto your cluster provided as is. Honestly, I took the shortcut and did not externalize a lot of configuration values. It was more a test of the overall handling for me. But everything lays there and should be easily adaptable.
+installs the result onto your cluster provided as is. Honestly, I took the shortcut and did not externalize a lot of configuration values. It was more a test of the overall handling for me. But everything lays there and should be easily adaptable.
 
 ## Some feedback on the Tanzu tooling
 

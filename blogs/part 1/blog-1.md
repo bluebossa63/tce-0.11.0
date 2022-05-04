@@ -70,13 +70,13 @@ This is the KubeadmConfigTemplate for the nodes and as you can see, within preKu
 
 ## Use a .local domain 
 
-If you are using a domain like my ne.local you have to do additional steps to enable name resolution. If you don't do that you'll get "Temporary failure in name resolution". system-resloved is causing this issue because it considers itself als master of the whole top level domain "local". You can overcome this problem by explicitely setting the [DNS search patch to this domain](https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-tanzu-k8s-clusters-config-plans.html#resolve-local)
+If you are using a domain like my ne.local you have to do additional steps to enable name resolution. If you don't do that you'll get "Temporary failure in name resolution". system-resloved is causing this issue because it considers itself als master of the whole top level domain "local". You can overcome this problem by explicitely setting the [DNS search path to this domain](https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-tanzu-k8s-clusters-config-plans.html#resolve-local)
 
 # Installation
 The installation is straightforward, this time I installed the TCE management cluster on my homelab on vCenter. [Last time](https://vdan.niceneasy.ch/tanzu-challenge-1/) I tested an installation first on docker on a AWS VM. As it is very well documented, I won't repeat the necessary steps. [This blog](https://www.virtuallypotato.com/ldaps-authentication-tanzu-community-edition/) is helpful to set up LDAP authentication.
 For the first try, I just started the UI and created a minimal management cluster and immediately created a managed workload cluster.
 
-As I wanted to keep everything as simple as possible, I did not install NSX Advanced Load Balancer (Avi) oder HA-Proxy. Tanzu itself uses [kube-vip](https://kube-vip.chipzoller.dev/docs/) to create the API endpoint. Having some experiences with [metallb](https://metallb.org/), I decided to use these components to enable support for the [Services of type LoadBalancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/). 
+As I wanted to keep everything as simple as possible, I did not install NSX Advanced Load Balancer (Avi) or HA-Proxy. Tanzu itself uses [kube-vip](https://kube-vip.chipzoller.dev/docs/) to create the API endpoint. Having some experiences with [metallb](https://metallb.org/), I decided to use these components to enable support for the [Services of type LoadBalancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/). 
 
 *The files I am referencing throughout my blog post can be found [here](https://github.com/bluebossa63/tce-0.11.0).*
 
