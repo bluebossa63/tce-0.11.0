@@ -1,0 +1,61 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: workload-role
+rules:
+- apiGroups:
+  - source.toolkit.fluxcd.io
+  - kpack.io
+  - kapp.k14s.io/v1alpha1
+  - kappctrl.k14s.io
+  - serving.knative.dev/v1
+  - serving.knative.dev
+  - carto.run
+  - '*'
+  resources:
+  - gitrepositories
+  - images
+  - configs
+  - apps
+  - services
+  - runnables
+  - configmaps
+  - secrets
+  verbs:
+  - list
+  - create
+  - update
+  - delete
+  - patch
+  - watch
+  - get
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: registry-credentials
+type: kubernetes.io/dockerconfigjson
+stringData:
+  .dockerconfigjson: | 
+    {"auths":{"harbor.ne.local":{"auth":"*********************************"},"https://index.docker.io/v1/":{"auth":"**********************************"}}}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: workload-user-sa
+secrets:
+- name: registry-credentials
+imagePullSecrets:
+- name: registry-credentials
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: workload-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: workload-role
+subjects:
+- kind: ServiceAccount
+  name: workload-user-sa
