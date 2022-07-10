@@ -4,13 +4,13 @@ metadata:
   labels:
     app: vault
   name: vault-httpproxy
-  namespace: hashicorp-vault
+  namespace: vault
 spec:
   routes:
   - conditions:
     - prefix: /
     services:
-    - name: vault
+    - name: hashicorp-vault
       port: 8200
   virtualhost:
     fqdn: vault.ne.local

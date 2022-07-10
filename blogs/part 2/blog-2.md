@@ -30,6 +30,7 @@ You can install the packages from the TCE catalog one by one in any combination,
 Bundling requires aggregating all needed values into one component ([common value file](../../app-toolkit/values.yaml)) - this can be done but needs to be tested on the individual package level anyway. So I followed the lead of the contents of the app-toolkit and installed everything individually - adding harbor and the recommendation of [this vsphere must-read on monitoring](https://tanzucommunityedition.io/docs/v0.11/vsphere-monitoring-stack/):
 
 ```bash
+#already installed in the management cluster:
 tanzu package install cert-manager --package-name cert-manager.community.tanzu.vmware.com --version 1.6.1
 
 #create custom certificate authority CA and cluster issuer
@@ -43,6 +44,10 @@ tanzu package install contour --package-name contour.community.tanzu.vmware.com 
 tanzu package install prometheus --package-name prometheus.community.tanzu.vmware.com --version 2.27.0-1 --values-file prometheus/prometheus-values.yaml
 
 tanzu package install grafana --package-name grafana.community.tanzu.vmware.com --version 7.5.11 --values-file grafana/grafana-values.yaml
+
+#adapt certificates and use your own cluster issuer
+#kubectl edit certificate grafana-ca -n grafana
+#kubectl edit certificate grafana-tls-cert -n grafana
 
 tanzu package install harbor --package-name harbor.community.tanzu.vmware.com --version 2.3.3 --values-file harbor/harbor-values.yaml
 

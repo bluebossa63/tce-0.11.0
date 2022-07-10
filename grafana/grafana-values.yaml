@@ -10,7 +10,7 @@ grafana:
       containers:
         resources: {}
   service:
-    type: LoadBalancer
+    type: NodePort
     port: 80
     targetPort: 3000
     labels: {}

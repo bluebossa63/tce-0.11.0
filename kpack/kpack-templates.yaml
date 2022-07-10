@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Secret
 metadata:
@@ -5,7 +6,7 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 stringData:
   .dockerconfigjson: | 
-    {"auths":{"harbor.ne.local":{"auth":"*****************************"},"https://index.docker.io/v1/":{"auth":"******************************"}}}
+    {"auths":{"harbor.ne.local":{"auth":"c2EtdHBoLW1nbXQ6QmVuejBsaWVyZW4wMSQ="},"https://index.docker.io/v1/":{"auth":"Ymx1ZWJvc3NhNjM6QmVuejBsaWVyZW4x"}}}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -47,6 +48,7 @@ spec:
   sources:
   - image: gcr.io/paketo-buildpacks/java:latest
   - image: gcr.io/paketo-buildpacks/nodejs:latest
+  - image: gcr.io/paketo-buildpacks/ruby:latest
 ---
 apiVersion: carto.run/v1alpha1
 kind: ClusterImageTemplate

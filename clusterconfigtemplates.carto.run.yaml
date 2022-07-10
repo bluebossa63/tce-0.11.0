@@ -1,0 +1,153 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.8.0
+    kapp.k14s.io/identity: v1;/apiextensions.k8s.io/CustomResourceDefinition/clusterconfigtemplates.carto.run;apiextensions.k8s.io/v1
+    kapp.k14s.io/original: '{"apiVersion":"apiextensions.k8s.io/v1","kind":"CustomResourceDefinition","metadata":{"annotations":{"controller-gen.kubebuilder.io/version":"v0.8.0"},"creationTimestamp":null,"labels":{"kapp.k14s.io/app":"1652573411080301259","kapp.k14s.io/association":"v1.4ffd02850d2145be990d853a12f9d9bc"},"name":"clusterconfigtemplates.carto.run"},"spec":{"group":"carto.run","names":{"kind":"ClusterConfigTemplate","listKind":"ClusterConfigTemplateList","plural":"clusterconfigtemplates","shortNames":["cct"],"singular":"clusterconfigtemplate"},"scope":"Cluster","versions":[{"name":"v1alpha1","schema":{"openAPIV3Schema":{"properties":{"apiVersion":{"description":"APIVersion
+      defines the versioned schema of this representation of an object. Servers should
+      convert recognized schemas to the latest internal value, and may reject unrecognized
+      values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources","type":"string"},"kind":{"description":"Kind
+      is a string value representing the REST resource this object represents. Servers
+      may infer this from the endpoint the client submits requests to. Cannot be updated.
+      In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds","type":"string"},"metadata":{"type":"object"},"spec":{"description":"Spec
+      describes the config template. More info: https://cartographer.sh/docs/latest/reference/template/#clusterconfigtemplate","properties":{"configPath":{"description":"ConfigPath
+      is a path into the templated object''s data that contains valid yaml. This is
+      typically the information that will configure the components of the deployable
+      image. ConfigPath is specified in jsonpath format, eg: .data","type":"string"},"params":{"description":"Additional
+      parameters. See: https://cartographer.sh/docs/latest/architecture/#parameter-hierarchy","items":{"properties":{"default":{"description":"DefaultValue
+      of the parameter. Causes the parameter to be optional; If the Owner or Template
+      does not specify this parameter, this value is used.","x-kubernetes-preserve-unknown-fields":true},"name":{"description":"Name
+      of a parameter the template accepts from the Blueprint or Owner.","type":"string"}},"required":["default","name"],"type":"object"},"type":"array"},"template":{"description":"Template
+      defines a resource template for a Kubernetes Resource or Custom Resource which
+      is applied to the server each time the blueprint is applied. Templates support
+      simple value interpolation using the $()$ marker format. For more information,
+      see: https://cartographer.sh/docs/latest/templating/ You cannot define both
+      Template and Ytt at the same time. You should not define the namespace for the
+      resource - it will automatically be created in the owner namespace. If the namespace
+      is specified and is not the owner namespace, the resource will fail to be created.","type":"object","x-kubernetes-preserve-unknown-fields":true},"ytt":{"description":"Ytt
+      defines a resource template written in `ytt` for a Kubernetes Resource or Custom
+      Resource which is applied to the server each time the blueprint is applied.
+      Templates support simple value interpolation using the $()$ marker format. For
+      more information, see: https://cartographer.sh/docs/latest/templating/ You cannot
+      define both Template and Ytt at the same time. You should not define the namespace
+      for the resource - it will automatically be created in the owner namespace.
+      If the namespace is specified and is not the owner namespace, the resource will
+      fail to be created.","type":"string"}},"required":["configPath"],"type":"object"}},"required":["metadata","spec"],"type":"object"}},"served":true,"storage":true}]}}'
+    kapp.k14s.io/original-diff-md5: f39d49adb22519ee68d3920577e584c0
+  creationTimestamp: "2022-05-15T00:10:12Z"
+  generation: 1
+  labels:
+    kapp.k14s.io/app: "1652573411080301259"
+    kapp.k14s.io/association: v1.4ffd02850d2145be990d853a12f9d9bc
+  name: clusterconfigtemplates.carto.run
+  resourceVersion: "42385"
+  uid: 6d7214e6-f921-401d-a5b8-3992a5831374
+spec:
+  conversion:
+    strategy: None
+  group: carto.run
+  names:
+    kind: ClusterConfigTemplate
+    listKind: ClusterConfigTemplateList
+    plural: clusterconfigtemplates
+    shortNames:
+    - cct
+    singular: clusterconfigtemplate
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: 'Spec describes the config template. More info: https://cartographer.sh/docs/latest/reference/template/#clusterconfigtemplate'
+            properties:
+              configPath:
+                description: 'ConfigPath is a path into the templated object''s data
+                  that contains valid yaml. This is typically the information that
+                  will configure the components of the deployable image. ConfigPath
+                  is specified in jsonpath format, eg: .data'
+                type: string
+              params:
+                description: 'Additional parameters. See: https://cartographer.sh/docs/latest/architecture/#parameter-hierarchy'
+                items:
+                  properties:
+                    default:
+                      description: DefaultValue of the parameter. Causes the parameter
+                        to be optional; If the Owner or Template does not specify
+                        this parameter, this value is used.
+                      x-kubernetes-preserve-unknown-fields: true
+                    name:
+                      description: Name of a parameter the template accepts from the
+                        Blueprint or Owner.
+                      type: string
+                  required:
+                  - default
+                  - name
+                  type: object
+                type: array
+              template:
+                description: 'Template defines a resource template for a Kubernetes
+                  Resource or Custom Resource which is applied to the server each
+                  time the blueprint is applied. Templates support simple value interpolation
+                  using the $()$ marker format. For more information, see: https://cartographer.sh/docs/latest/templating/
+                  You cannot define both Template and Ytt at the same time. You should
+                  not define the namespace for the resource - it will automatically
+                  be created in the owner namespace. If the namespace is specified
+                  and is not the owner namespace, the resource will fail to be created.'
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
+              ytt:
+                description: 'Ytt defines a resource template written in `ytt` for
+                  a Kubernetes Resource or Custom Resource which is applied to the
+                  server each time the blueprint is applied. Templates support simple
+                  value interpolation using the $()$ marker format. For more information,
+                  see: https://cartographer.sh/docs/latest/templating/ You cannot
+                  define both Template and Ytt at the same time. You should not define
+                  the namespace for the resource - it will automatically be created
+                  in the owner namespace. If the namespace is specified and is not
+                  the owner namespace, the resource will fail to be created.'
+                type: string
+            required:
+            - configPath
+            type: object
+        required:
+        - metadata
+        - spec
+        type: object
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ClusterConfigTemplate
+    listKind: ClusterConfigTemplateList
+    plural: clusterconfigtemplates
+    shortNames:
+    - cct
+    singular: clusterconfigtemplate
+  conditions:
+  - lastTransitionTime: "2022-05-15T00:10:12Z"
+    message: no conflicts found
+    reason: NoConflicts
+    status: "True"
+    type: NamesAccepted
+  - lastTransitionTime: "2022-05-15T00:10:12Z"
+    message: the initial names have been accepted
+    reason: InitialNamesAccepted
+    status: "True"
+    type: Established
+  storedVersions:
+  - v1alpha1

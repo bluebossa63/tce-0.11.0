@@ -1,19 +1,19 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: vault-tls-cert
-  namespace: vault
+  name: wildcard-tls-cert
+  namespace: default
 spec:
-  commonName: vault.ne.local
+  commonName: "*.grafana.ne.local"
   dnsNames:
-  - vault.ne.local
+  - "*.grafana.ne.local"
   duration: 87600h0m0s
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
     name: niceneasy-ca
   renewBefore: 360h0m0s
-  secretName: vault-tls
+  secretName: wildcard-tls
   usages:
   - server auth
   - client auth

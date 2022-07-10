@@ -1,0 +1,13 @@
+
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  name: decidim-lausa
+  labels:
+    apps.tanzu.vmware.com/workload-type: web
+spec:
+  source:
+    git:
+      url: https://github.com/bluebossa63/decidim-lausa.git
+      ref:
+        branch: master

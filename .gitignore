@@ -16,3 +16,4 @@ kpack/harbor.ne.local.secret.yaml
 kpack/docker-secret.yaml
 plex/install.log
 packaging/vault/0.1.0/bundle/vendir.lock.yml
+argocd/gparted-live-1.4.0-1-amd64.iso
